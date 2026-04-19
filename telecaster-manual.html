@@ -1,0 +1,1820 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Fender American Professional II Telecaster &mdash; A Field Guide to its Electronics</title>
+<script>
+(function () {
+  try {
+    var k = 'telecaster-guide-theme';
+    var s = localStorage.getItem(k);
+    if (s === 'dark' || (s !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch (e) { /* localStorage unavailable */ }
+})();
+</script>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f7f5ef;
+    --paper: #fffdf7;
+    --ink: #1d2330;
+    --ink-soft: #4a5366;
+    --rule: #d8d3c4;
+    --accent: #1f4f8a;       /* blueprint blue */
+    --accent-soft: #e6eef8;
+    --hot: #c0392b;          /* hot wire */
+    --ground: #2b2b2b;       /* ground wire */
+    --neck: #2e7d32;         /* neck pickup wire */
+    --bridge: #b8860b;       /* bridge pickup wire */
+    --warn-bg: #fff5e0;
+    --warn-border: #d6a648;
+    --warn-strong: #8a5a00;
+    --code-bg: #eceadf;
+    --diagram-surface: #fbfaf3;
+    /* SVG accents not covered by semantic tokens */
+    --svg-string: #888888;
+    --svg-pole-fill: #aaaaaa;
+    --svg-pole-stroke: #333333;
+    --svg-pot-track: #8a6f3a;
+    --svg-tone-mid: #7a7a7a;
+    --svg-tone-label: #666666;
+    --svg-plug-metal: #cfcfcf;
+    --svg-plug-dark: #222222;
+    --toggle-track: #c9c4b8;
+    --toggle-thumb: #fffdf7;
+    --toggle-focus: rgba(31, 79, 138, 0.45);
+    --max: 880px;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #12151c;
+    --paper: #1a1f2a;
+    --ink: #e8eaf0;
+    --ink-soft: #9aa3b8;
+    --rule: #2d3548;
+    --accent: #7eb3f0;
+    --accent-soft: #1a2436;
+    --hot: #f28b82;
+    --ground: #b8c0d4;
+    --neck: #7fd67a;
+    --bridge: #e6c066;
+    --warn-bg: #2a2318;
+    --warn-border: #a67c2e;
+    --warn-strong: #e6c066;
+    --code-bg: #252b3a;
+    --diagram-surface: #141924;
+    --svg-string: #8b95a8;
+    --svg-pole-fill: #5c6578;
+    --svg-pole-stroke: #c5cdd8;
+    --svg-pot-track: #a68b5a;
+    --svg-tone-mid: #8b95a8;
+    --svg-tone-label: #b4bcc9;
+    --svg-plug-metal: #6b7384;
+    --svg-plug-dark: #e8eaf0;
+    --toggle-track: #3d4558;
+    --toggle-thumb: #e8eaf0;
+    --toggle-focus: rgba(126, 179, 240, 0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+          Arial, "Noto Sans", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, var(--max));
+    gap: 48px;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 32px 28px 96px;
+  }
+  /* Table of contents */
+  nav.toc {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    font-size: 14px;
+    padding: 18px 18px 22px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  nav.toc h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin: 0 0 10px;
+  }
+  nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+  nav.toc li { margin: 0; padding: 4px 0; counter-increment: toc; }
+  nav.toc li::before {
+    content: counter(toc) ".";
+    color: var(--ink-soft);
+    margin-right: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  nav.toc a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+  }
+  nav.toc a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+  /* Theme toggle */
+  .theme-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .theme-bar__label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .theme-bar__modes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .theme-bar__modes span { min-width: 2.2em; text-align: center; }
+  .theme-bar__modes .is-active { color: var(--ink); font-weight: 600; }
+  .theme-switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 48px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 13px;
+    background: var(--toggle-track);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .theme-switch:hover { filter: brightness(1.06); }
+  .theme-switch:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .theme-switch__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--toggle-thumb);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease;
+    pointer-events: none;
+  }
+  [data-theme="dark"] .theme-switch__thumb {
+    transform: translateX(22px);
+  }
+  main { background: var(--paper); border: 1px solid var(--rule); border-radius: 8px;
+         padding: 40px 48px; }
+  header.title { border-bottom: 1px solid var(--rule); padding-bottom: 22px; margin-bottom: 28px; }
+  header.title .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px;
+    color: var(--accent); font-weight: 600;
+  }
+  header.title h1 {
+    font-size: 30px; line-height: 1.2; margin: 8px 0 6px;
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  }
+  header.title p.subtitle { color: var(--ink-soft); margin: 0; font-style: italic; }
+
+  h2.section {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-size: 24px;
+    margin: 56px 0 8px;
+    padding-top: 8px;
+    border-top: 2px solid var(--accent);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2.section .num {
+    color: var(--accent); font-weight: 700; font-size: 14px;
+    font-family: "SF Mono", ui-monospace, Menlo, monospace;
+    letter-spacing: 0.05em;
+  }
+  h3 { font-size: 17px; margin: 26px 0 6px; }
+  p, li { color: var(--ink); }
+  p { margin: 10px 0; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 4px 0; }
+
+  code, kbd {
+    font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.92em;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* Diagram figure */
+  figure.diagram {
+    margin: 22px 0 18px;
+    padding: 18px 18px 12px;
+    background: var(--diagram-surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+  figure.diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  figure.diagram figcaption {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  /* Callouts */
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-soft);
+    padding: 12px 16px;
+    margin: 18px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 15px;
+  }
+  .callout.warn { border-left-color: var(--warn-border); background: var(--warn-bg); }
+  .callout strong { display: block; margin-bottom: 4px; font-size: 12px;
+                    text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+  .callout.warn strong { color: var(--warn-strong); }
+
+  /* Tables */
+  table.spec {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  table.spec th, table.spec td {
+    border: 1px solid var(--rule);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.spec th { background: var(--accent-soft); font-weight: 600; }
+  table.spec td.center, table.spec th.center { text-align: center; }
+
+  /* SVG defaults inside diagrams */
+  .stroke { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+  .stroke-soft { stroke: var(--ink-soft); stroke-width: 1; fill: none; }
+  .fill-paper { fill: var(--paper); }
+  .label { font: 12px -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .label-soft { font: 11px -apple-system, "Segoe UI", sans-serif; fill: var(--ink-soft); }
+  .label-bold { font: 600 12px -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .wire { fill: none; stroke-width: 2; stroke-linecap: round; }
+  .wire.hot { stroke: var(--hot); }
+  .wire.gnd { stroke: var(--ground); }
+  .wire.neck { stroke: var(--neck); }
+  .wire.bridge { stroke: var(--bridge); }
+  .wire.signal { stroke: var(--accent); }
+
+  /* Footer */
+  footer.colophon {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+
+  /* Print — always light palette for legible hard copy */
+  @media print {
+    html { color-scheme: light !important; }
+    html[data-theme="dark"] {
+      --bg: #fff;
+      --paper: #fff;
+      --ink: #1d2330;
+      --ink-soft: #4a5366;
+      --rule: #d8d3c4;
+      --accent: #1f4f8a;
+      --accent-soft: #e6eef8;
+      --hot: #c0392b;
+      --ground: #2b2b2b;
+      --neck: #2e7d32;
+      --bridge: #b8860b;
+      --warn-bg: #fff5e0;
+      --warn-border: #d6a648;
+      --warn-strong: #8a5a00;
+      --code-bg: #eceadf;
+      --diagram-surface: #fbfaf3;
+      --svg-string: #888888;
+      --svg-pole-fill: #aaaaaa;
+      --svg-pole-stroke: #333333;
+      --svg-pot-track: #8a6f3a;
+      --svg-tone-mid: #7a7a7a;
+      --svg-tone-label: #666666;
+      --svg-plug-metal: #cfcfcf;
+      --svg-plug-dark: #222222;
+    }
+    body { background: #fff; }
+    .layout { grid-template-columns: 1fr; gap: 0; padding: 0; max-width: none; }
+    nav.toc { display: none; }
+    main { border: none; padding: 0; }
+    h2.section { page-break-before: auto; break-before: auto; }
+    figure.diagram { page-break-inside: avoid; break-inside: avoid; }
+    .callout { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; max-height: none; }
+    main { padding: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-switch__thumb { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc" aria-label="Table of contents">
+    <div class="theme-bar">
+      <span class="theme-bar__label" id="theme-label">Appearance</span>
+      <div class="theme-bar__modes">
+        <span class="theme-mode-light is-active" id="theme-label-light" aria-hidden="true">Light</span>
+        <button type="button" class="theme-switch" id="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to dark mode">
+          <span class="theme-switch__thumb" aria-hidden="true"></span>
+        </button>
+        <span class="theme-mode-dark" id="theme-label-dark" aria-hidden="true">Dark</span>
+      </div>
+    </div>
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#signal-flow">Signal Flow Overview</a></li>
+      <li><a href="#pickups">The Pickups (V-Mod II)</a></li>
+      <li><a href="#switch">The 3-Way Lever Switch</a></li>
+      <li><a href="#volume">Master Volume Pot</a></li>
+      <li><a href="#treble-bleed">Treble Bleed Circuit</a></li>
+      <li><a href="#tone">Master Tone Pot &amp; Capacitor</a></li>
+      <li><a href="#pushpush">Push-Push Series/Parallel Switch</a></li>
+      <li><a href="#jack">Output Jack</a></li>
+      <li><a href="#grounding">Grounding Scheme</a></li>
+      <li><a href="#wiring">Full Wiring Diagram</a></li>
+      <li><a href="#function-table">Switch &amp; Control Function Table</a></li>
+      <li><a href="#troubleshooting">Troubleshooting the Neck Dropout</a></li>
+      <li><a href="#repair">Repair Guide: 3-Way Switch</a></li>
+      <li><a href="#glossary">Glossary &amp; Further Reading</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="title">
+      <div class="eyebrow">A Field Guide</div>
+      <h1>The Fender American Professional II Telecaster &mdash; How its Electronics Actually Work</h1>
+      <p class="subtitle">Every component in the signal chain, how it shapes the sound, and how to fix the most common failure: the intermittent neck-position dropout.</p>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- 1. INTRODUCTION                                               -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="intro"><span class="num">01</span> Introduction</h2>
+    <p>
+      The Fender Telecaster has a deserved reputation as one of the simplest electric guitars
+      ever made. There are only a handful of parts in the signal path, and almost all of them
+      are passive: no transistors, no power supply, no microcontroller. A vibrating steel string
+      moves through a magnetic field, that motion induces a tiny voltage in a coil of copper
+      wire, and a few resistors, capacitors and a switch shape that voltage on its way to the
+      output jack.
+    </p>
+    <p>
+      That simplicity is exactly why the Telecaster is a wonderful instrument to understand
+      from first principles. By the end of this guide you should be able to point at every
+      component in your guitar's control cavity, name what it does, sketch how it is wired,
+      and &mdash; importantly for the problem you're chasing &mdash; reason about what could go
+      wrong with it.
+    </p>
+    <p>
+      The specific instrument this guide describes is the <strong>Fender American Professional II
+      Telecaster</strong> (model number prefix <code>011394</code>, service manual PR5854).
+      It uses two V-Mod II single-coil pickups, a 3-way lever switch, a 250&nbsp;k&Omega; master
+      volume with a treble bleed, and a 250&nbsp;k&Omega; master tone with a 0.022&nbsp;&micro;F
+      capacitor and a <em>push-push</em> switch that toggles the middle position between
+      parallel and series wiring. We will walk through each of these in turn.
+    </p>
+    <div class="callout">
+      <strong>How to read this guide</strong>
+      The early sections build up the vocabulary &mdash; what a pickup, a pot, a switch and a
+      capacitor are, in isolation. The middle sections show how Fender wires them together.
+      The last two sections are the practical payoff: a diagnostic walkthrough and a
+      step-by-step repair procedure for the intermittent neck-position fault.
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 2. SIGNAL FLOW OVERVIEW                                       -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="signal-flow"><span class="num">02</span> Signal Flow Overview</h2>
+    <p>
+      Before we open up any single component, here is the whole circuit at the highest possible
+      level. The signal is born in the pickups and travels through five stages on its way to
+      the amplifier:
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 820 230" role="img" aria-label="Signal flow block diagram from pickups to amplifier.">
+        <!-- pickups -->
+        <g>
+          <rect x="20" y="40" width="120" height="50" rx="6" class="stroke fill-paper"/>
+          <text x="80" y="62" text-anchor="middle" class="label-bold">Neck pickup</text>
+          <text x="80" y="78" text-anchor="middle" class="label-soft">V-Mod II single coil</text>
+          <rect x="20" y="120" width="120" height="50" rx="6" class="stroke fill-paper"/>
+          <text x="80" y="142" text-anchor="middle" class="label-bold">Bridge pickup</text>
+          <text x="80" y="158" text-anchor="middle" class="label-soft">V-Mod II single coil</text>
+        </g>
+        <!-- 3-way -->
+        <rect x="200" y="80" width="120" height="50" rx="6" class="stroke fill-paper"/>
+        <text x="260" y="102" text-anchor="middle" class="label-bold">3-way switch</text>
+        <text x="260" y="118" text-anchor="middle" class="label-soft">selects pickup(s)</text>
+        <!-- volume + bleed -->
+        <rect x="380" y="80" width="120" height="50" rx="6" class="stroke fill-paper"/>
+        <text x="440" y="102" text-anchor="middle" class="label-bold">Volume pot</text>
+        <text x="440" y="118" text-anchor="middle" class="label-soft">+ treble bleed</text>
+        <!-- tone + push-push -->
+        <rect x="560" y="80" width="120" height="50" rx="6" class="stroke fill-paper"/>
+        <text x="620" y="102" text-anchor="middle" class="label-bold">Tone pot</text>
+        <text x="620" y="118" text-anchor="middle" class="label-soft">+ push-push (DPDT)</text>
+        <!-- jack -->
+        <rect x="720" y="80" width="80" height="50" rx="6" class="stroke fill-paper"/>
+        <text x="760" y="102" text-anchor="middle" class="label-bold">Jack</text>
+        <text x="760" y="118" text-anchor="middle" class="label-soft">to amp</text>
+
+        <!-- arrows -->
+        <path class="wire signal" d="M140 65 C170 65 170 95 200 95"/>
+        <path class="wire signal" d="M140 145 C170 145 170 115 200 115"/>
+        <path class="wire signal" d="M320 105 L380 105"/>
+        <path class="wire signal" d="M500 105 L560 105"/>
+        <path class="wire signal" d="M680 105 L720 105"/>
+        <!-- arrowheads -->
+        <g fill="var(--accent)">
+          <polygon points="200,95 192,90 192,100"/>
+          <polygon points="200,115 192,110 192,120"/>
+          <polygon points="380,105 372,100 372,110"/>
+          <polygon points="560,105 552,100 552,110"/>
+          <polygon points="720,105 712,100 712,110"/>
+        </g>
+
+        <text x="410" y="200" text-anchor="middle" class="label-soft">
+          The whole circuit is passive: no batteries, no active electronics. Every stage either
+          selects, attenuates or filters the signal.
+        </text>
+      </svg>
+      <figcaption>Figure 2.1 &mdash; Block diagram of the Telecaster's signal path.</figcaption>
+    </figure>
+
+    <ol>
+      <li><strong>Pickups</strong> generate a small AC voltage (typically a few hundred millivolts) when strings vibrate above them.</li>
+      <li><strong>The 3-way switch</strong> chooses which pickup(s) feed the rest of the circuit.</li>
+      <li><strong>The volume pot</strong> attenuates the combined signal. The <strong>treble bleed</strong> across it preserves high frequencies as you turn down.</li>
+      <li><strong>The tone pot + capacitor</strong> form an adjustable low-pass filter, dumping high frequencies to ground when you roll the knob back.</li>
+      <li><strong>The output jack</strong> sends the signal &mdash; tip is hot, sleeve is ground &mdash; out the cable to the amplifier.</li>
+    </ol>
+    <p>
+      The push-push switch hidden inside the tone knob is a sixth element that is not in the
+      main signal path itself; it just <em>reroutes</em> how the two pickups are combined when
+      the 3-way switch is in its middle position. We will get to it in section 8.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 3. PICKUPS                                                    -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="pickups"><span class="num">03</span> The Pickups (V-Mod II)</h2>
+    <p>
+      A guitar pickup is, mechanically, almost the simplest electrical generator possible:
+      six small bar magnets stood on end, with several thousand turns of very thin enameled
+      copper wire wrapped around them. Above each magnet, a steel string is suspended.
+    </p>
+    <p>
+      When the string vibrates, it disturbs the magnetic field around the pole pieces. By
+      Faraday's law of induction, a changing magnetic field through a coil of wire induces
+      a voltage across that coil. The voltage waveform is an electrical mirror of the
+      string's mechanical motion. That is the entire transducer &mdash; no power supply,
+      no microphone, no amplification. Everything that comes after is just selecting and
+      shaping that signal.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 760 320" role="img" aria-label="Cutaway of a single coil pickup showing magnets, coil, baseplate and a vibrating string.">
+        <!-- string -->
+        <path d="M20 60 Q380 30 740 60" stroke="var(--svg-string)" stroke-width="2" fill="none"/>
+        <text x="380" y="22" text-anchor="middle" class="label-soft">vibrating steel string</text>
+        <!-- field lines -->
+        <g stroke="var(--accent)" stroke-width="0.8" fill="none" stroke-dasharray="3 3" opacity="0.65">
+          <path d="M380 70 C320 90 320 200 380 220"/>
+          <path d="M380 70 C440 90 440 200 380 220"/>
+          <path d="M380 70 C300 90 300 220 380 240"/>
+          <path d="M380 70 C460 90 460 220 380 240"/>
+        </g>
+        <text x="500" y="120" class="label-soft">magnetic field lines</text>
+
+        <!-- pickup body cutaway -->
+        <!-- coil bobbin -->
+        <rect x="220" y="180" width="320" height="80" class="stroke fill-paper"/>
+        <text x="380" y="276" text-anchor="middle" class="label-soft">flatwork (top + bottom of bobbin)</text>
+
+        <!-- six pole pieces -->
+        <g>
+          <g>
+            <rect x="245" y="90" width="14" height="160" fill="var(--svg-pole-fill)" stroke="var(--svg-pole-stroke)"/>
+            <rect x="295" y="90" width="14" height="160" fill="var(--svg-pole-fill)" stroke="var(--svg-pole-stroke)"/>
+            <rect x="345" y="90" width="14" height="160" fill="var(--svg-pole-fill)" stroke="var(--svg-pole-stroke)"/>
+            <rect x="395" y="90" width="14" height="160" fill="var(--svg-pole-fill)" stroke="var(--svg-pole-stroke)"/>
+            <rect x="445" y="90" width="14" height="160" fill="var(--svg-pole-fill)" stroke="var(--svg-pole-stroke)"/>
+            <rect x="495" y="90" width="14" height="160" fill="var(--svg-pole-fill)" stroke="var(--svg-pole-stroke)"/>
+          </g>
+          <text x="252" y="84" text-anchor="middle" class="label-soft">N</text>
+          <text x="302" y="84" text-anchor="middle" class="label-soft">N</text>
+          <text x="352" y="84" text-anchor="middle" class="label-soft">N</text>
+          <text x="402" y="84" text-anchor="middle" class="label-soft">N</text>
+          <text x="452" y="84" text-anchor="middle" class="label-soft">N</text>
+          <text x="502" y="84" text-anchor="middle" class="label-soft">N</text>
+          <text x="180" y="100" class="label-soft">alnico</text>
+          <text x="180" y="115" class="label-soft">pole pieces</text>
+          <path d="M218 108 L240 108" class="stroke-soft"/>
+        </g>
+
+        <!-- coil hatching -->
+        <g stroke="var(--ink)" stroke-width="0.8" fill="none">
+          <line x1="222" y1="186" x2="538" y2="186"/>
+          <line x1="222" y1="194" x2="538" y2="194"/>
+          <line x1="222" y1="202" x2="538" y2="202"/>
+          <line x1="222" y1="210" x2="538" y2="210"/>
+          <line x1="222" y1="218" x2="538" y2="218"/>
+          <line x1="222" y1="226" x2="538" y2="226"/>
+          <line x1="222" y1="234" x2="538" y2="234"/>
+          <line x1="222" y1="242" x2="538" y2="242"/>
+        </g>
+        <text x="600" y="220" class="label-soft">~7,000 turns</text>
+        <text x="600" y="234" class="label-soft">42-AWG enamel</text>
+        <text x="600" y="248" class="label-soft">copper wire</text>
+
+        <!-- leads -->
+        <path class="wire hot" d="M220 230 L150 280 L60 280"/>
+        <path class="wire gnd" d="M540 230 L610 280 L700 280"/>
+        <text x="60" y="298" class="label-bold" fill="var(--hot)">hot (start of coil)</text>
+        <text x="700" y="298" text-anchor="end" class="label-bold" fill="var(--ground)">ground (finish)</text>
+      </svg>
+      <figcaption>Figure 3.1 &mdash; Cutaway of a Tele-style single-coil pickup. The string is the only moving part of the system.</figcaption>
+    </figure>
+
+    <h3>The American Pro II V-Mod II specs</h3>
+    <p>
+      Fender's V-Mod II Telecaster pickups are voiced specifically for this model. The factory
+      specifications are:
+    </p>
+    <table class="spec">
+      <thead>
+        <tr><th>Pickup</th><th>DC resistance</th><th>Magnets</th><th>Polarity</th><th>Lead wires</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Neck</td>
+          <td>5.6 &ndash; 6.2&nbsp;k&Omega;</td>
+          <td>Alnico 5 &amp; Alnico 2 (unbeveled)</td>
+          <td class="center">North</td>
+          <td>Black, white, yellow</td>
+        </tr>
+        <tr>
+          <td>Bridge</td>
+          <td>7.2 &ndash; 7.8&nbsp;k&Omega;</td>
+          <td>Alnico 5 &amp; Alnico 2 (unbeveled)</td>
+          <td class="center">South</td>
+          <td>Black, red</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Why two different magnet types?</h3>
+    <p>
+      Fender mixes Alnico 5 and Alnico 2 pole pieces within each pickup. Alnico 5 is the
+      stronger magnet and tends to deliver a tight, clear, slightly aggressive top end;
+      Alnico 2 is softer and gives a sweeter, more vocal midrange. By using both within
+      the same pickup, the engineers can balance the response of individual strings &mdash;
+      typically the wound strings sit under one magnet type and the plain strings under the
+      other &mdash; without resorting to staggered pole heights.
+    </p>
+
+    <h3>Why opposite polarity between neck and bridge?</h3>
+    <p>
+      The neck pickup is wound and magnetized as <em>north up</em>; the bridge pickup is
+      <em>south up</em>. Combined with reverse winding directions, this is the classic
+      <strong>RWRP</strong> arrangement (reverse-wound, reverse-polarity). When both pickups are
+      selected together (position 2 of the 3-way), any electromagnetic hum picked up from the
+      surrounding environment &mdash; mostly 60&nbsp;Hz from mains wiring &mdash; arrives at
+      both coils <em>in phase</em>, but because the coils are wound in opposite directions, that
+      hum signal cancels at the output. Meanwhile the actual string signal is reinforced
+      because the magnetic polarity is also flipped, so it remains in phase. The result:
+      position 2 is noticeably quieter (less hum) than positions 1 or 3.
+    </p>
+
+    <h3>Why three wires on the neck pickup?</h3>
+    <p>
+      The bridge pickup has just two leads &mdash; coil hot (black) and coil ground (red).
+      The neck pickup has three:
+    </p>
+    <ul>
+      <li><strong>Black</strong> &mdash; coil hot (start of winding).</li>
+      <li><strong>White</strong> &mdash; coil cold (end of winding).</li>
+      <li><strong>Yellow</strong> &mdash; metal cover/ground shield, kept on its own wire.</li>
+    </ul>
+    <p>
+      Keeping the cover ground separate from the coil cold is what makes the push-push
+      series/parallel mod possible. In <em>parallel</em> mode the cold and the cover both
+      go to ground, and the pickup behaves like any normal Tele neck pickup. In
+      <em>series</em> mode (push-push engaged) the coil cold is <em>lifted off ground</em>
+      and routed to the bridge pickup's hot lead instead, so the two coils end up wired in
+      series. If the cover ground and coil cold were soldered together at the pickup, this
+      switching would have no effect &mdash; the neck pickup's cold would always be grounded
+      through the cover, and the series mod would silently behave like parallel.
+    </p>
+    <div class="callout warn">
+      <strong>If you ever re-solder the neck pickup</strong>
+      Keep yellow (cover) and white (coil cold) on separate lugs. Joining them at the
+      pickup defeats the push-push series mode permanently and is a common mistake.
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4. THREE-WAY SWITCH                                           -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="switch"><span class="num">04</span> The 3-Way Lever Switch</h2>
+    <p>
+      The 3-way lever switch (Fender part number <code>0992041000</code>) is mechanically simple
+      and electrically clever. Underneath the lever there are two parallel rows of solder lugs
+      &mdash; the two <em>poles</em> &mdash; and a sliding wiper that rides on top of them.
+      Each pole has a <strong>common</strong> lug at one end and three <strong>stage</strong>
+      lugs along the side. As the lever moves, the wiper bridges the common to one or two of
+      the stage lugs depending on the position.
+    </p>
+    <p>
+      A standard Fender Telecaster only uses <em>one</em> of the two poles to switch the
+      pickups; the second pole is unused. (Strat-style 5-way switches use both poles, which
+      is why the same part appears in many Fender guitars.)
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 760 320" role="img" aria-label="Top view of a 3-way lever switch in each of its three positions.">
+        <!-- three positions across -->
+        <g>
+          <text x="125" y="30" text-anchor="middle" class="label-bold">Position 1 &mdash; Bridge</text>
+          <text x="380" y="30" text-anchor="middle" class="label-bold">Position 2 &mdash; Both</text>
+          <text x="635" y="30" text-anchor="middle" class="label-bold">Position 3 &mdash; Neck</text>
+        </g>
+
+        <!-- helper to draw a switch -->
+        <g id="switch-template" style="display:none;"></g>
+
+        <!-- POSITION 1: lever forward (toward bridge) -->
+        <g transform="translate(20,50)">
+          <rect x="0" y="0" width="210" height="220" rx="8" class="stroke fill-paper"/>
+          <!-- stage lugs row -->
+          <circle cx="40"  cy="80" r="8" class="stroke fill-paper"/>
+          <circle cx="105" cy="80" r="8" class="stroke fill-paper"/>
+          <circle cx="170" cy="80" r="8" class="stroke fill-paper"/>
+          <text x="40"  y="65" text-anchor="middle" class="label-soft">Bridge</text>
+          <text x="105" y="65" text-anchor="middle" class="label-soft">(empty)</text>
+          <text x="170" y="65" text-anchor="middle" class="label-soft">Neck</text>
+          <!-- common -->
+          <circle cx="105" cy="170" r="9" class="stroke fill-paper"/>
+          <text x="105" y="195" text-anchor="middle" class="label-soft">COMMON (to volume)</text>
+          <!-- wiper bridges common to bridge lug -->
+          <path d="M40 80 L105 170" stroke="var(--accent)" stroke-width="3" fill="none"/>
+          <text x="125" y="125" class="label" fill="var(--accent)">wiper</text>
+        </g>
+
+        <!-- POSITION 2: lever middle (both) -->
+        <g transform="translate(275,50)">
+          <rect x="0" y="0" width="210" height="220" rx="8" class="stroke fill-paper"/>
+          <circle cx="40"  cy="80" r="8" class="stroke fill-paper"/>
+          <circle cx="105" cy="80" r="8" class="stroke fill-paper"/>
+          <circle cx="170" cy="80" r="8" class="stroke fill-paper"/>
+          <text x="40"  y="65" text-anchor="middle" class="label-soft">Bridge</text>
+          <text x="105" y="65" text-anchor="middle" class="label-soft">(empty)</text>
+          <text x="170" y="65" text-anchor="middle" class="label-soft">Neck</text>
+          <circle cx="105" cy="170" r="9" class="stroke fill-paper"/>
+          <text x="105" y="195" text-anchor="middle" class="label-soft">COMMON</text>
+          <!-- wiper bridges to BOTH bridge and neck -->
+          <path d="M40 80 L105 170 L170 80" stroke="var(--accent)" stroke-width="3" fill="none"/>
+        </g>
+
+        <!-- POSITION 3: lever back (neck) -->
+        <g transform="translate(530,50)">
+          <rect x="0" y="0" width="210" height="220" rx="8" class="stroke fill-paper"/>
+          <circle cx="40"  cy="80" r="8" class="stroke fill-paper"/>
+          <circle cx="105" cy="80" r="8" class="stroke fill-paper"/>
+          <circle cx="170" cy="80" r="8" class="stroke fill-paper"/>
+          <text x="40"  y="65" text-anchor="middle" class="label-soft">Bridge</text>
+          <text x="105" y="65" text-anchor="middle" class="label-soft">(empty)</text>
+          <text x="170" y="65" text-anchor="middle" class="label-soft">Neck</text>
+          <circle cx="105" cy="170" r="9" class="stroke fill-paper"/>
+          <text x="105" y="195" text-anchor="middle" class="label-soft">COMMON</text>
+          <!-- wiper bridges common to neck lug only -->
+          <path d="M170 80 L105 170" stroke="var(--accent)" stroke-width="3" fill="none"/>
+          <!-- highlight neck contact -->
+          <circle cx="170" cy="80" r="11" stroke="var(--hot)" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
+          <text x="170" y="115" text-anchor="middle" class="label" fill="var(--hot)">wear point</text>
+        </g>
+      </svg>
+      <figcaption>
+        Figure 4.1 &mdash; Schematic top view of the 3-way switch in each position. The blue
+        line is the wiper bridging lugs together. The dashed circle on position 3 marks the
+        contact most prone to oxidation and intermittent contact &mdash; the failure mode this
+        guide will help you fix.
+      </figcaption>
+    </figure>
+
+    <h3>Inside the switch &mdash; why it goes intermittent</h3>
+    <p>
+      The wiper is a small phosphor-bronze finger (or pair of fingers) held against the lug
+      contacts by a leaf spring and held in detent positions by a notched rail. Three things
+      eventually conspire against it:
+    </p>
+    <ul>
+      <li><strong>Oxidation.</strong> Both the wiper and the lug contacts develop a thin oxide layer over time, especially in humid environments. Oxide is a poor conductor; signal drops out until the wiper scrapes through it again.</li>
+      <li><strong>Spring fatigue.</strong> The leaf spring that pushes the wiper down weakens slowly. With less contact pressure, oxide buildup matters more, and any vibration can momentarily lift the wiper off the lug.</li>
+      <li><strong>Solder-lug stress.</strong> Repeated soldering, or wires pulled tight, can crack the inside of a solder joint where you cannot see it. Wiggling the lever flexes the lug just enough to make and break the connection.</li>
+    </ul>
+    <p>
+      All three failure modes produce exactly the symptom you are experiencing: a position
+      that <em>usually</em> works but cuts out, and that comes back when you wiggle the lever.
+      Section 13 walks through how to confirm which one it is.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 5. VOLUME POT                                                 -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="volume"><span class="num">05</span> Master Volume Pot</h2>
+    <p>
+      A potentiometer (&ldquo;pot&rdquo;) is a three-terminal variable resistor. Inside the
+      brass case is a curved strip of resistive material (usually a carbon-composite track)
+      with a metal terminal at each end. A wiper, mounted on the rotating shaft, slides along
+      that strip. The terminal connected to the wiper taps off whatever voltage is present at
+      the wiper's current position on the strip.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 760 280" role="img" aria-label="Cutaway of a potentiometer and its schematic symbol used as a voltage divider.">
+        <!-- LEFT: cutaway -->
+        <g transform="translate(20,20)">
+          <text x="170" y="14" text-anchor="middle" class="label-bold">Pot internals (top view)</text>
+          <!-- body -->
+          <circle cx="170" cy="130" r="100" class="stroke fill-paper"/>
+          <!-- resistive track -->
+          <path d="M90 130 A80 80 0 1 1 250 130" stroke="var(--svg-pot-track)" stroke-width="10" fill="none"/>
+          <!-- end terminals -->
+          <circle cx="90"  cy="130" r="6" fill="var(--ink)"/>
+          <circle cx="250" cy="130" r="6" fill="var(--ink)"/>
+          <text x="80"  y="155" text-anchor="end" class="label">terminal 1</text>
+          <text x="80"  y="170" text-anchor="end" class="label-soft">(input / hot)</text>
+          <text x="260" y="155" class="label">terminal 3</text>
+          <text x="260" y="170" class="label-soft">(ground)</text>
+          <!-- wiper -->
+          <line x1="170" y1="130" x2="220" y2="78" stroke="var(--accent)" stroke-width="3"/>
+          <circle cx="170" cy="130" r="6" fill="var(--accent)"/>
+          <circle cx="220" cy="78"  r="5" fill="var(--accent)"/>
+          <text x="170" y="252" text-anchor="middle" class="label">terminal 2 (wiper / output)</text>
+          <line x1="170" y1="225" x2="170" y2="240" class="stroke-soft"/>
+          <text x="240" y="70" class="label" fill="var(--accent)">shaft rotation</text>
+        </g>
+
+        <!-- RIGHT: schematic symbol used as voltage divider -->
+        <g transform="translate(440,30)">
+          <text x="140" y="4" text-anchor="middle" class="label-bold">As a voltage divider</text>
+          <!-- input from switch -->
+          <text x="0"  y="60" class="label-soft">from switch</text>
+          <line x1="60" y1="60" x2="120" y2="60" class="stroke"/>
+          <!-- resistor body -->
+          <rect x="120" y="60" width="80" height="120" class="stroke fill-paper"/>
+          <text x="160" y="125" text-anchor="middle" class="label">250 k&Omega;</text>
+          <!-- wiper arrow -->
+          <line x1="200" y1="120" x2="240" y2="120" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="240,120 232,116 232,124" fill="var(--accent)"/>
+          <text x="248" y="124" class="label" fill="var(--accent)">wiper &rarr; output</text>
+          <!-- ground -->
+          <line x1="160" y1="180" x2="160" y2="210" class="stroke"/>
+          <line x1="140" y1="210" x2="180" y2="210" class="stroke"/>
+          <line x1="146" y1="216" x2="174" y2="216" class="stroke"/>
+          <line x1="152" y1="222" x2="168" y2="222" class="stroke"/>
+          <text x="200" y="218" class="label-soft">ground</text>
+        </g>
+      </svg>
+      <figcaption>Figure 5.1 &mdash; A potentiometer is just a resistor with a movable tap. As the wiper moves toward the ground end, more of the signal is shunted away.</figcaption>
+    </figure>
+
+    <h3>How the volume pot attenuates the signal</h3>
+    <p>
+      In the Telecaster, terminal 1 (input) receives the signal coming out of the 3-way
+      switch's common lug. Terminal 3 is grounded. The wiper (terminal 2) sends the output
+      forward to the tone pot and the jack.
+    </p>
+    <p>
+      When the knob is fully clockwise, the wiper sits right at terminal 1. There is almost
+      no resistance between input and output, and the full pickup signal comes through. As
+      you turn the knob counter-clockwise, the wiper moves toward terminal 3 (ground). More
+      and more of the signal is diverted to ground through the resistive track, and less
+      reaches the output. At the fully closed position the wiper is at ground and you hear
+      silence.
+    </p>
+
+    <h3>Audio taper vs linear taper, and why 250&nbsp;k&Omega;</h3>
+    <p>
+      The Am Pro II uses a <strong>250&nbsp;k&Omega; audio (logarithmic) taper</strong> pot.
+      &ldquo;Audio taper&rdquo; means the resistance changes logarithmically with rotation,
+      not linearly. This matters because human hearing is itself logarithmic: a true linear
+      pot would feel like all the volume change happens in the last quarter of the rotation.
+      An audio taper feels smooth and even from 0 to 10 because it tracks how loud we
+      <em>perceive</em> the change.
+    </p>
+    <p>
+      The total resistance value (250&nbsp;k&Omega;) also affects tone, not just volume. Single
+      coil pickups loaded with a lower-value pot lose more high frequencies to the loading
+      effect. Fender uses 250&nbsp;k&Omega; for single-coil instruments specifically because
+      it tames the natural brightness of single coils. Humbucker-equipped guitars tend to use
+      500&nbsp;k&Omega; (less loading) to keep them from sounding too dark.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 6. TREBLE BLEED                                               -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="treble-bleed"><span class="num">06</span> Treble Bleed Circuit</h2>
+    <p>
+      There is one annoying side effect of the volume pot's loading interaction: as you turn
+      down, you also lose <em>treble</em>, not just overall level. The combination of the
+      pickup's inductance, the cable's capacitance, and the changing source impedance forms
+      a low-pass filter whose corner frequency drops as the volume comes down. Roll from 10
+      to 5 on a stock guitar with no compensation and the tone goes muffled long before it
+      gets quiet.
+    </p>
+    <p>
+      The Am Pro II ships with a small PCB (<code>7711092000</code>) soldered across two of
+      the volume pot's lugs. This is the <strong>treble bleed</strong>: a small capacitor
+      (typically a few hundred picofarads) often paired with a resistor, wired between
+      <strong>terminal 1 (input)</strong> and <strong>terminal 2 (wiper / output)</strong> of
+      the volume pot.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 700 240" role="img" aria-label="Schematic of a treble bleed cap and resistor across the input and wiper of the volume pot.">
+        <!-- input -->
+        <text x="40" y="100" class="label-soft">from switch</text>
+        <line x1="100" y1="100" x2="180" y2="100" class="stroke"/>
+        <!-- pot -->
+        <rect x="180" y="100" width="80" height="80" class="stroke fill-paper"/>
+        <text x="220" y="146" text-anchor="middle" class="label">250 k&Omega;</text>
+        <line x1="260" y1="140" x2="320" y2="140" stroke="var(--accent)" stroke-width="2"/>
+        <polygon points="320,140 312,136 312,144" fill="var(--accent)"/>
+        <text x="328" y="144" class="label">to tone / jack</text>
+        <!-- ground -->
+        <line x1="220" y1="180" x2="220" y2="210" class="stroke"/>
+        <line x1="200" y1="210" x2="240" y2="210" class="stroke"/>
+
+        <!-- treble bleed across input (top of pot) and wiper -->
+        <path d="M180 100 C180 50 320 50 320 140" class="stroke" stroke-dasharray="0"/>
+        <!-- cap symbol -->
+        <line x1="232" y1="60" x2="232" y2="40" class="stroke"/>
+        <line x1="248" y1="60" x2="248" y2="40" class="stroke"/>
+        <text x="240" y="34" text-anchor="middle" class="label">C ~ 1 nF</text>
+        <text x="240" y="80" text-anchor="middle" class="label-soft">treble bleed cap</text>
+
+        <!-- optional resistor branch parallel -->
+        <path d="M180 100 C180 200 320 200 320 140" class="stroke-soft"/>
+        <!-- resistor zigzag -->
+        <polyline points="225,180 232,176 240,184 248,176 256,184 264,176" class="stroke-soft"/>
+        <text x="240" y="208" text-anchor="middle" class="label-soft">optional R (parallel)</text>
+      </svg>
+      <figcaption>Figure 6.1 &mdash; Treble bleed wired across the volume pot. The capacitor is a high-pass shortcut around the resistive track.</figcaption>
+    </figure>
+
+    <p>
+      Capacitors pass high frequencies easily and block low frequencies. By placing a small
+      cap between the pot's input and its wiper, you give the high frequencies a shortcut
+      around the resistive track. As you turn the volume down, lows are attenuated normally
+      but highs continue to leak through the cap, keeping the tone bright. The optional
+      parallel resistor adjusts how much of the bass also gets through, fine-tuning the
+      perceived flatness of the response across the rotation.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 7. TONE                                                       -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="tone"><span class="num">07</span> Master Tone Pot &amp; Capacitor</h2>
+    <p>
+      The tone control is also a 250&nbsp;k&Omega; audio-taper pot &mdash; same physical part
+      as the volume pot, just wired differently and with a push-push switch built into the
+      back of it (more on that in section 8). Instead of being placed in series with the
+      signal, the tone pot is wired in <em>parallel</em> with it, with a 0.022&nbsp;&micro;F
+      capacitor between the wiper and ground.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 700 260" role="img" aria-label="Schematic of the tone control: pot in series with cap to ground, forming a low-pass filter.">
+        <!-- signal line -->
+        <text x="40" y="80" class="label-soft">signal from volume wiper</text>
+        <line x1="100" y1="80" x2="600" y2="80" class="stroke"/>
+        <text x="620" y="84" class="label-soft">to jack</text>
+
+        <!-- tap down to tone pot -->
+        <line x1="320" y1="80" x2="320" y2="120" class="stroke"/>
+
+        <!-- tone pot -->
+        <rect x="280" y="120" width="80" height="60" class="stroke fill-paper"/>
+        <text x="320" y="156" text-anchor="middle" class="label">250 k&Omega;</text>
+        <text x="380" y="155" class="label-soft">tone pot</text>
+
+        <!-- cap -->
+        <line x1="320" y1="180" x2="320" y2="200" class="stroke"/>
+        <line x1="305" y1="200" x2="335" y2="200" class="stroke"/>
+        <line x1="305" y1="208" x2="335" y2="208" class="stroke"/>
+        <text x="345" y="210" class="label">0.022 &micro;F</text>
+
+        <!-- ground -->
+        <line x1="320" y1="216" x2="320" y2="232" class="stroke"/>
+        <line x1="300" y1="232" x2="340" y2="232" class="stroke"/>
+        <line x1="306" y1="238" x2="334" y2="238" class="stroke"/>
+        <line x1="312" y1="244" x2="328" y2="244" class="stroke"/>
+      </svg>
+      <figcaption>Figure 7.1 &mdash; The tone pot in series with the tone cap to ground forms a variable-strength low-pass filter on the main signal line.</figcaption>
+    </figure>
+
+    <h3>How it filters the signal</h3>
+    <p>
+      A capacitor's resistance to alternating current (its <em>impedance</em>) decreases as
+      frequency increases. At very low frequencies (bass notes) the cap looks almost like an
+      open circuit and very little signal flows through it to ground. At very high
+      frequencies (cymbal-like sparkle, pick attack) the cap looks almost like a short
+      circuit, providing a path for those frequencies to be dumped to ground.
+    </p>
+    <p>
+      The pot in series with the cap controls <em>how easily</em> those high frequencies
+      reach the cap. With the tone knob full up (10), the pot is at its maximum 250&nbsp;k&Omega;
+      and very little signal makes it to the cap; the tone is bright. As you roll the knob
+      down, the resistance drops, more high-frequency content flows through to ground, and
+      the tone darkens. At zero, the pot is essentially zero ohms and the cap is shunting
+      everything above its corner frequency directly to ground &mdash; the classic
+      &ldquo;woman tone&rdquo; sound.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 600 220" role="img" aria-label="Frequency response curves at different tone settings.">
+        <!-- axes -->
+        <line x1="60" y1="20" x2="60" y2="180" class="stroke"/>
+        <line x1="60" y1="180" x2="560" y2="180" class="stroke"/>
+        <text x="20" y="100" class="label-soft" transform="rotate(-90 20 100)">level</text>
+        <text x="310" y="205" text-anchor="middle" class="label-soft">frequency &rarr;</text>
+        <text x="80"  y="200" class="label-soft">100&nbsp;Hz</text>
+        <text x="260" y="200" class="label-soft">1&nbsp;kHz</text>
+        <text x="500" y="200" class="label-soft">10&nbsp;kHz</text>
+
+        <!-- tone = 10 (flat-ish) -->
+        <path d="M60 60 L500 60 Q540 60 560 80" stroke="var(--accent)" stroke-width="2" fill="none"/>
+        <text x="510" y="50" class="label" fill="var(--accent)">tone 10</text>
+        <!-- tone = 5 -->
+        <path d="M60 70 L260 70 Q360 70 560 140" stroke="var(--svg-tone-mid)" stroke-width="2" fill="none"/>
+        <text x="430" y="120" class="label" fill="var(--svg-tone-label)">tone 5</text>
+        <!-- tone = 0 -->
+        <path d="M60 80 L160 80 Q260 80 560 175" stroke="var(--hot)" stroke-width="2" fill="none"/>
+        <text x="380" y="160" class="label" fill="var(--hot)">tone 0</text>
+      </svg>
+      <figcaption>Figure 7.2 &mdash; Conceptual frequency response of the Tele tone control at three settings. Lower settings progressively roll off treble.</figcaption>
+    </figure>
+
+    <p>
+      The choice of cap value sets the corner frequency. 0.047&nbsp;&micro;F (vintage Fender)
+      starts rolling off lower in the spectrum, producing a darker, woollier sound at zero.
+      0.022&nbsp;&micro;F &mdash; what Fender uses on the Am Pro II &mdash; rolls off higher,
+      leaving more midrange present even with the tone knob all the way down.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 8. PUSH-PUSH                                                  -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="pushpush"><span class="num">08</span> Push-Push Series/Parallel Switch</h2>
+    <p>
+      The tone pot on the Am Pro II is a special part (Fender <code>7713119000</code>): it is a
+      250&nbsp;k&Omega; audio-taper pot with a <strong>push-push</strong> latching switch built
+      into the body. Pushing the knob down once latches the switch in one state; pushing it
+      again releases it back to the other state. The switch is mechanically independent of the
+      pot's rotation &mdash; you can change the tone setting without affecting the switch
+      state, and vice versa.
+    </p>
+    <p>
+      The switch itself is a <strong>DPDT</strong> &mdash; double-pole, double-throw. It has
+      six lugs arranged as two independent switches that move together: each &ldquo;pole&rdquo;
+      (an input lug) can be connected to one of two &ldquo;throws&rdquo; (output lugs) at any
+      time. In the Am Pro II this DPDT is used to reroute the connection between the two
+      pickups when the 3-way is in position 2.
+    </p>
+
+    <h3>Position 2: parallel mode (push-push down)</h3>
+    <p>
+      With the push-push <em>down</em> &mdash; the default &mdash; the switch routes both
+      pickups through the 3-way switch in the conventional manner. Both pickup hots end up
+      tied together at the 3-way's common lug; both pickup grounds (and the neck cover ground)
+      go to the chassis ground. The result is the classic &ldquo;both on&rdquo; Tele tone.
+      Electrically the two pickups are wired in <em>parallel</em>: their outputs sum, but the
+      effective output impedance is roughly halved. The sound is balanced and a bit scooped
+      in the mids, with good clarity.
+    </p>
+
+    <h3>Position 2: series mode (push-push up)</h3>
+    <p>
+      With the push-push <em>up</em>, the DPDT does two things at once:
+    </p>
+    <ol>
+      <li><strong>Lifts the neck pickup's coil cold (white) off ground.</strong></li>
+      <li><strong>Routes that lifted lead to the bridge pickup's hot lead instead.</strong></li>
+    </ol>
+    <p>
+      Now the signal path is: bridge pickup ground &rarr; bridge pickup hot &rarr;
+      (through DPDT) &rarr; neck pickup cold &rarr; through the neck coil &rarr; neck pickup
+      hot &rarr; into the 3-way switch &rarr; volume. The two coils are stacked end-to-end:
+      one drives the next, in <em>series</em>.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 760 320" role="img" aria-label="Side-by-side schematic of pickups in parallel and in series.">
+        <!-- PARALLEL -->
+        <g transform="translate(20,20)">
+          <text x="170" y="10" text-anchor="middle" class="label-bold">Parallel (push-push down)</text>
+          <!-- neck coil -->
+          <g transform="translate(40,40)">
+            <rect x="0" y="0" width="100" height="40" class="stroke fill-paper"/>
+            <text x="50" y="26" text-anchor="middle" class="label">Neck coil</text>
+          </g>
+          <!-- bridge coil -->
+          <g transform="translate(40,140)">
+            <rect x="0" y="0" width="100" height="40" class="stroke fill-paper"/>
+            <text x="50" y="26" text-anchor="middle" class="label">Bridge coil</text>
+          </g>
+          <!-- joins -->
+          <line x1="140" y1="60" x2="220" y2="60" class="wire neck"/>
+          <line x1="140" y1="160" x2="220" y2="160" class="wire bridge"/>
+          <line x1="220" y1="60" x2="220" y2="160" class="wire signal"/>
+          <line x1="220" y1="110" x2="280" y2="110" class="wire signal"/>
+          <text x="290" y="114" class="label">to 3-way</text>
+          <!-- grounds -->
+          <line x1="40"  y1="60"  x2="0" y2="60"  class="wire gnd"/>
+          <line x1="40"  y1="160" x2="0" y2="160" class="wire gnd"/>
+          <line x1="0"   y1="60"  x2="0" y2="220" class="wire gnd"/>
+          <line x1="-15" y1="220" x2="15" y2="220" class="stroke"/>
+          <line x1="-9"  y1="226" x2="9"  y2="226" class="stroke"/>
+          <text x="0" y="245" text-anchor="middle" class="label-soft">ground</text>
+        </g>
+
+        <!-- SERIES -->
+        <g transform="translate(420,20)">
+          <text x="170" y="10" text-anchor="middle" class="label-bold">Series (push-push up)</text>
+          <g transform="translate(40,40)">
+            <rect x="0" y="0" width="100" height="40" class="stroke fill-paper"/>
+            <text x="50" y="26" text-anchor="middle" class="label">Neck coil</text>
+          </g>
+          <g transform="translate(40,140)">
+            <rect x="0" y="0" width="100" height="40" class="stroke fill-paper"/>
+            <text x="50" y="26" text-anchor="middle" class="label">Bridge coil</text>
+          </g>
+          <!-- bridge ground stays grounded -->
+          <line x1="40" y1="160" x2="0"  y2="160" class="wire gnd"/>
+          <line x1="0"  y1="160" x2="0"  y2="220" class="wire gnd"/>
+          <line x1="-15" y1="220" x2="15" y2="220" class="stroke"/>
+          <line x1="-9"  y1="226" x2="9"  y2="226" class="stroke"/>
+          <text x="0" y="245" text-anchor="middle" class="label-soft">ground</text>
+
+          <!-- Bridge hot -> Neck cold (DPDT routing) -->
+          <line x1="140" y1="160" x2="200" y2="160" class="wire bridge"/>
+          <line x1="200" y1="160" x2="200" y2="60"  class="wire bridge"/>
+          <line x1="200" y1="60"  x2="140" y2="60"  class="wire bridge"/>
+          <text x="220" y="114" class="label" fill="var(--bridge)">via DPDT</text>
+
+          <!-- Neck hot to 3-way (top of neck coil, leftmost terminal in this drawing) -->
+          <!-- redraw: in parallel diagram both ends were "hot to right". For series we
+               need neck cold (left/ground end in parallel diagram) lifted from ground and
+               wired to bridge hot. Show neck hot exiting LEFT instead -->
+          <line x1="40"  y1="60" x2="-40" y2="60" class="wire neck"/>
+          <line x1="-40" y1="60" x2="-40" y2="-10" class="wire neck"/>
+          <line x1="-40" y1="-10" x2="280" y2="-10" class="wire neck"/>
+          <line x1="280" y1="-10" x2="280" y2="110" class="wire signal"/>
+          <line x1="280" y1="110" x2="320" y2="110" class="wire signal"/>
+          <text x="335" y="114" class="label">to 3-way</text>
+        </g>
+      </svg>
+      <figcaption>Figure 8.1 &mdash; Position 2 with the pickups in parallel (left) and in series (right). In series, the bridge pickup feeds into the neck pickup's cold lead; the combined signal exits the neck pickup's hot lead.</figcaption>
+    </figure>
+
+    <h3>Why series sounds the way it does</h3>
+    <p>
+      In parallel, the two pickups' voltages average and their impedances drop. In series,
+      their voltages <em>add</em> and their impedances <em>add</em>. The audible effects are:
+    </p>
+    <ul>
+      <li><strong>More output.</strong> Roughly twice the voltage swing, so you hit the amp harder.</li>
+      <li><strong>Thicker midrange.</strong> Doubled impedance shifts the resonant peak of the pickup/cable system down into the mids, fattening the sound.</li>
+      <li><strong>Less top-end sparkle.</strong> Because of that resonance shift, the very top frequencies are slightly tamed.</li>
+    </ul>
+    <p>
+      The result is a Tele middle position that approximates the punch and warmth of a
+      humbucker without changing pickups. It is still hum-cancelling, because the RWRP
+      relationship between the two coils is preserved.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 9. JACK                                                       -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="jack"><span class="num">09</span> Output Jack</h2>
+    <p>
+      The output is a standard 1/4&quot; mono &ldquo;phone&rdquo; jack (Fender
+      <code>0021956049</code>). It has two contacts: the <strong>tip</strong> contact, which
+      carries the hot signal, and the <strong>sleeve</strong> contact, which is connected to
+      the chassis ground.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 660 200" role="img" aria-label="A 1/4 inch TS plug showing the tip and sleeve contacts.">
+        <!-- plug body -->
+        <rect x="20" y="80" width="200" height="40" class="stroke fill-paper"/>
+        <!-- shaft -->
+        <rect x="220" y="80" width="280" height="40" fill="var(--svg-plug-metal)" stroke="var(--svg-plug-dark)"/>
+        <!-- insulating ring near tip -->
+        <rect x="430" y="80" width="14" height="40" fill="var(--svg-plug-dark)"/>
+        <!-- tip -->
+        <path d="M444 80 L500 80 L520 100 L500 120 L444 120 Z" fill="var(--svg-plug-metal)" stroke="var(--svg-plug-dark)"/>
+        <text x="510" y="74" text-anchor="middle" class="label-bold" fill="var(--hot)">TIP</text>
+        <text x="510" y="142" text-anchor="middle" class="label-soft">hot signal</text>
+        <text x="320" y="74" text-anchor="middle" class="label-bold" fill="var(--ground)">SLEEVE</text>
+        <text x="320" y="142" text-anchor="middle" class="label-soft">ground</text>
+        <text x="120" y="106" text-anchor="middle" class="label">strain relief / housing</text>
+
+        <!-- jack contacts shown abstractly -->
+        <g transform="translate(540,60)">
+          <text x="0" y="0" class="label-bold">Inside the guitar:</text>
+          <line x1="0" y1="20" x2="80" y2="20" class="wire hot"/>
+          <text x="0" y="38" class="label" fill="var(--hot)">tip lug &rarr; from tone/volume</text>
+          <line x1="0" y1="60" x2="80" y2="60" class="wire gnd"/>
+          <text x="0" y="78" class="label" fill="var(--ground)">sleeve lug &rarr; chassis ground</text>
+        </g>
+      </svg>
+      <figcaption>Figure 9.1 &mdash; A standard TS (tip-sleeve) 1/4&quot; plug. Inside the guitar, the corresponding jack lugs receive the hot signal and chassis ground.</figcaption>
+    </figure>
+
+    <p>
+      When you insert a plug, two things happen mechanically:
+    </p>
+    <ul>
+      <li>A spring contact inside the jack presses against the metal sleeve of the plug, completing the ground connection.</li>
+      <li>A second spring contact, normally arched away, touches the metal tip of the plug, completing the hot connection.</li>
+    </ul>
+    <p>
+      The shape of those internal spring contacts is what determines whether the jack feels
+      &ldquo;tight&rdquo; or sloppy. Output jacks fail in essentially the same ways the 3-way
+      switch does: the spring contacts lose tension, oxidize, or the solder lugs work loose.
+      If a guitar &ldquo;cuts out when you wiggle the cable,&rdquo; the jack is the suspect;
+      if it cuts out when you operate the pickup selector, the 3-way is.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 10. GROUNDING                                                 -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="grounding"><span class="num">10</span> Grounding Scheme</h2>
+    <p>
+      Every component in the guitar that is supposed to be at ground potential needs to
+      arrive at the same physical point with as little wire and as few hops as possible.
+      Fender does this by using the back of the volume pot's brass case as a <em>star
+      ground</em> &mdash; the central hub that every other ground wire returns to.
+    </p>
+    <ul>
+      <li>The neck pickup's cold (white) lead and cover ground (yellow) terminate on the volume pot back (or are routed through the push-push DPDT first).</li>
+      <li>The bridge pickup's cold (red) lead terminates on the volume pot back.</li>
+      <li>The 3-way switch's ground lug runs to the volume pot back.</li>
+      <li>The tone pot's ground lug and case sit at the same potential because both pots' cases are bonded.</li>
+      <li>The output jack's sleeve lug runs to the volume pot back.</li>
+      <li>A wire from the bridge plate (under the bridge, in contact with the strings) runs into the control cavity and grounds to the volume pot back.</li>
+    </ul>
+    <p>
+      That last wire is critical for two reasons. First, it grounds you, the player,
+      whenever you touch the strings, which dramatically reduces the hum your body picks up.
+      Second, it grounds the bridge plate itself so it can't act like a small antenna
+      radiating noise into the pickups.
+    </p>
+    <div class="callout warn">
+      <strong>Safety note about strings-as-ground</strong>
+      Because your body is connected to the amp's ground via the strings, a faulty amp with
+      a wiring problem (or one with a polarity-inverting plug into a damaged outlet) can
+      put dangerous voltage on the strings. If you ever feel a tingle on your lips when
+      they touch a microphone while playing, stop and have the amp's ground checked.
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 11. FULL WIRING                                               -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="wiring"><span class="num">11</span> Full Wiring Diagram</h2>
+    <p>
+      The diagram below combines everything from sections 3 through 10 into a single map.
+      Wire colors match Fender's stock harness:
+    </p>
+    <ul>
+      <li><span style="color:var(--hot);font-weight:600;">Red</span> &mdash; hot / signal</li>
+      <li><span style="color:var(--neck);font-weight:600;">Green</span> &mdash; neck pickup leads (treated as a group; physical wires are black/white/yellow)</li>
+      <li><span style="color:var(--bridge);font-weight:600;">Gold</span> &mdash; bridge pickup leads</li>
+      <li><span style="color:var(--ground);font-weight:600;">Black</span> &mdash; ground</li>
+      <li><span style="color:var(--accent);font-weight:600;">Blue</span> &mdash; main signal path through volume / tone / jack</li>
+    </ul>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 920 620" role="img" aria-label="Complete wiring diagram of the Fender American Professional II Telecaster.">
+        <!-- ============== PICKUPS (left) ============== -->
+        <!-- Neck pickup -->
+        <g transform="translate(20,40)">
+          <rect x="0" y="0" width="160" height="80" class="stroke fill-paper"/>
+          <text x="80" y="34" text-anchor="middle" class="label-bold">Neck pickup</text>
+          <text x="80" y="52" text-anchor="middle" class="label-soft">V-Mod II (5.6&ndash;6.2 k&Omega;)</text>
+          <text x="80" y="68" text-anchor="middle" class="label-soft">N polarity</text>
+          <!-- terminals -->
+          <circle cx="20"  cy="100" r="4" fill="var(--ink)"/>
+          <circle cx="80"  cy="100" r="4" fill="var(--ink)"/>
+          <circle cx="140" cy="100" r="4" fill="var(--ink)"/>
+          <text x="20"  y="118" text-anchor="middle" class="label-soft">black</text>
+          <text x="80"  y="118" text-anchor="middle" class="label-soft">white</text>
+          <text x="140" y="118" text-anchor="middle" class="label-soft">yellow</text>
+        </g>
+
+        <!-- Bridge pickup -->
+        <g transform="translate(20,330)">
+          <rect x="0" y="0" width="160" height="80" class="stroke fill-paper"/>
+          <text x="80" y="34" text-anchor="middle" class="label-bold">Bridge pickup</text>
+          <text x="80" y="52" text-anchor="middle" class="label-soft">V-Mod II (7.2&ndash;7.8 k&Omega;)</text>
+          <text x="80" y="68" text-anchor="middle" class="label-soft">S polarity</text>
+          <circle cx="55"  cy="80" r="4" fill="var(--ink)"/>
+          <circle cx="105" cy="80" r="4" fill="var(--ink)"/>
+          <text x="55"  y="100" text-anchor="middle" class="label-soft">black (hot)</text>
+          <text x="105" y="100" text-anchor="middle" class="label-soft">red (cold)</text>
+        </g>
+
+        <!-- Bridge plate ground -->
+        <g transform="translate(20,470)">
+          <rect x="0" y="0" width="160" height="40" class="stroke fill-paper"/>
+          <text x="80" y="25" text-anchor="middle" class="label">Bridge plate</text>
+          <circle cx="80" cy="48" r="4" fill="var(--ink)"/>
+        </g>
+
+        <!-- ============== 3-WAY SWITCH ============== -->
+        <g transform="translate(280,160)">
+          <rect x="0" y="0" width="180" height="160" class="stroke fill-paper"/>
+          <text x="90" y="22" text-anchor="middle" class="label-bold">3-way switch</text>
+          <text x="90" y="40" text-anchor="middle" class="label-soft">P/N 0992041000</text>
+          <!-- stage lugs (top row inside box) -->
+          <circle cx="40"  cy="70" r="6" class="stroke fill-paper"/>
+          <circle cx="90"  cy="70" r="6" class="stroke fill-paper"/>
+          <circle cx="140" cy="70" r="6" class="stroke fill-paper"/>
+          <text x="40"  y="58" text-anchor="middle" class="label-soft">bridge</text>
+          <text x="140" y="58" text-anchor="middle" class="label-soft">neck</text>
+          <!-- common lug -->
+          <circle cx="90" cy="130" r="7" class="stroke fill-paper"/>
+          <text x="90" y="150" text-anchor="middle" class="label-soft">COMMON</text>
+        </g>
+
+        <!-- Wires: pickups -> switch -->
+        <!-- Neck black (hot) -> neck stage lug -->
+        <path class="wire neck" d="M40 140 C100 140 220 230 320 230"/>
+        <text x="200" y="158" class="label-soft" fill="var(--neck)">neck hot &rarr; neck stage</text>
+        <!-- Bridge black (hot) -> bridge stage lug -->
+        <path class="wire bridge" d="M75 410 C160 410 220 230 320 230"/>
+        <text x="200" y="295" class="label-soft" fill="var(--bridge)">bridge hot &rarr; bridge stage</text>
+
+        <!-- ============== PUSH-PUSH DPDT (above tone) ============== -->
+        <g transform="translate(540,40)">
+          <rect x="0" y="0" width="200" height="120" class="stroke fill-paper"/>
+          <text x="100" y="22" text-anchor="middle" class="label-bold">Push-push DPDT</text>
+          <text x="100" y="38" text-anchor="middle" class="label-soft">on tone pot back</text>
+          <!-- 6 lugs in 2 rows -->
+          <g>
+            <circle cx="40"  cy="68" r="5" class="stroke fill-paper"/>
+            <circle cx="100" cy="68" r="5" class="stroke fill-paper"/>
+            <circle cx="160" cy="68" r="5" class="stroke fill-paper"/>
+            <circle cx="40"  cy="100" r="5" class="stroke fill-paper"/>
+            <circle cx="100" cy="100" r="5" class="stroke fill-paper"/>
+            <circle cx="160" cy="100" r="5" class="stroke fill-paper"/>
+          </g>
+          <text x="100" y="58" text-anchor="middle" class="label-soft">routes neck cold/cover &amp; bridge hot</text>
+        </g>
+        <!-- neck white (cold) into push-push -->
+        <path class="wire neck" d="M100 140 C100 80 540 80 580 84"/>
+        <!-- neck yellow (cover) into push-push -->
+        <path class="wire neck" d="M160 140 C160 60 600 60 640 84"/>
+        <!-- bridge red (cold) into push-push -->
+        <path class="wire bridge" d="M125 410 C300 410 540 100 580 116"/>
+
+        <!-- ============== VOLUME POT ============== -->
+        <g transform="translate(540,260)">
+          <rect x="0" y="0" width="200" height="120" class="stroke fill-paper"/>
+          <text x="100" y="22" text-anchor="middle" class="label-bold">Volume pot</text>
+          <text x="100" y="38" text-anchor="middle" class="label-soft">250 k&Omega; audio</text>
+          <!-- terminals -->
+          <circle cx="40"  cy="68" r="5" class="stroke fill-paper"/>
+          <circle cx="100" cy="68" r="5" class="stroke fill-paper"/>
+          <circle cx="160" cy="68" r="5" class="stroke fill-paper"/>
+          <text x="40"  y="56" text-anchor="middle" class="label-soft">in (1)</text>
+          <text x="100" y="56" text-anchor="middle" class="label-soft">wiper (2)</text>
+          <text x="160" y="56" text-anchor="middle" class="label-soft">gnd (3)</text>
+          <!-- treble bleed -->
+          <path d="M40 80 C50 100 90 100 100 80" class="stroke-soft"/>
+          <text x="70" y="112" class="label-soft">treble bleed PCB</text>
+        </g>
+        <!-- 3-way common -> volume input -->
+        <path class="wire signal" d="M370 290 L580 328"/>
+        <text x="445" y="310" class="label-soft" fill="var(--accent)">switch common &rarr; volume in</text>
+
+        <!-- ============== TONE POT ============== -->
+        <g transform="translate(540,440)">
+          <rect x="0" y="0" width="200" height="120" class="stroke fill-paper"/>
+          <text x="100" y="22" text-anchor="middle" class="label-bold">Tone pot</text>
+          <text x="100" y="38" text-anchor="middle" class="label-soft">250 k&Omega; (push-push body)</text>
+          <circle cx="40"  cy="68" r="5" class="stroke fill-paper"/>
+          <circle cx="100" cy="68" r="5" class="stroke fill-paper"/>
+          <circle cx="160" cy="68" r="5" class="stroke fill-paper"/>
+          <text x="40"  y="56" text-anchor="middle" class="label-soft">in (1)</text>
+          <text x="100" y="56" text-anchor="middle" class="label-soft">wiper (2)</text>
+          <text x="160" y="56" text-anchor="middle" class="label-soft">gnd (3)</text>
+          <!-- cap to ground -->
+          <line x1="100" y1="80" x2="100" y2="100" class="stroke"/>
+          <line x1="86"  y1="100" x2="114" y2="100" class="stroke"/>
+          <line x1="86"  y1="106" x2="114" y2="106" class="stroke"/>
+          <text x="125" y="106" class="label">0.022 &micro;F</text>
+          <line x1="100" y1="106" x2="100" y2="118" class="stroke"/>
+        </g>
+        <!-- volume wiper -> tone input + jack -->
+        <path class="wire signal" d="M640 348 L640 508"/>
+        <text x="650" y="430" class="label-soft" fill="var(--accent)">to tone in</text>
+        <path class="wire signal" d="M640 348 L820 348 L820 540"/>
+
+        <!-- ============== JACK ============== -->
+        <g transform="translate(770,540)">
+          <rect x="0" y="0" width="120" height="60" class="stroke fill-paper"/>
+          <text x="60" y="24" text-anchor="middle" class="label-bold">Output jack</text>
+          <text x="60" y="42" text-anchor="middle" class="label-soft">tip = hot</text>
+          <text x="60" y="56" text-anchor="middle" class="label-soft">sleeve = ground</text>
+        </g>
+
+        <!-- ============== STAR GROUND ============== -->
+        <g transform="translate(280,500)">
+          <circle cx="40" cy="40" r="22" class="stroke fill-paper"/>
+          <text x="40" y="44" text-anchor="middle" class="label-bold">GND</text>
+          <text x="40" y="92" text-anchor="middle" class="label-soft">Star ground</text>
+          <text x="40" y="106" text-anchor="middle" class="label-soft">(volume pot back)</text>
+          <!-- ground symbol -->
+          <line x1="20" y1="78" x2="60" y2="78" class="stroke"/>
+          <line x1="26" y1="84" x2="54" y2="84" class="stroke"/>
+          <line x1="32" y1="90" x2="48" y2="90" class="stroke"/>
+        </g>
+        <!-- ground returns -->
+        <path class="wire gnd" d="M180 490 L290 530"/>
+        <path class="wire gnd" d="M700 328 C700 380 360 460 320 500"/>
+        <path class="wire gnd" d="M700 508 C700 560 380 540 340 540"/>
+        <path class="wire gnd" d="M770 580 C600 600 380 560 340 540"/>
+
+        <!-- legend -->
+        <g transform="translate(20,560)">
+          <text x="0" y="0" class="label-bold">Wire legend</text>
+          <line x1="0" y1="14" x2="30" y2="14" class="wire neck"/>
+          <text x="36" y="18" class="label">neck leads</text>
+          <line x1="120" y1="14" x2="150" y2="14" class="wire bridge"/>
+          <text x="156" y="18" class="label">bridge leads</text>
+          <line x1="0" y1="34" x2="30" y2="34" class="wire signal"/>
+          <text x="36" y="38" class="label">main signal</text>
+          <line x1="120" y1="34" x2="150" y2="34" class="wire gnd"/>
+          <text x="156" y="38" class="label">ground</text>
+        </g>
+      </svg>
+      <figcaption>
+        Figure 11.1 &mdash; Complete wiring map of the Am Pro II Telecaster. The push-push DPDT
+        on the tone pot reroutes the neck pickup's cold lead and the bridge pickup's hot lead
+        to switch position 2 between parallel and series.
+      </figcaption>
+    </figure>
+
+    <!-- ============================================================ -->
+    <!-- 12. FUNCTION TABLE                                            -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="function-table"><span class="num">12</span> Switch &amp; Control Function Table</h2>
+    <p>
+      This table reproduces the official Fender service manual matrix: every combination of
+      3-way switch position and push-push state, and what you hear at the output.
+    </p>
+    <table class="spec">
+      <thead>
+        <tr>
+          <th>3-way position</th>
+          <th>Push-push <em>down</em></th>
+          <th>Push-push <em>up</em></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1 &mdash; forward (toward bridge)</strong></td>
+          <td>Bridge pickup only</td>
+          <td>Bridge pickup only</td>
+        </tr>
+        <tr>
+          <td><strong>2 &mdash; middle</strong></td>
+          <td>Neck + Bridge in <strong>parallel</strong></td>
+          <td>Neck + Bridge in <strong>series</strong></td>
+        </tr>
+        <tr>
+          <td><strong>3 &mdash; back (toward neck)</strong></td>
+          <td>Neck pickup only</td>
+          <td>Neck pickup only</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Note that the push-push only changes anything in <strong>position 2</strong>. In the
+      single-pickup positions (1 and 3), only one coil is in the circuit, so series vs
+      parallel is meaningless and the push-push has no audible effect.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 13. TROUBLESHOOTING                                           -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="troubleshooting"><span class="num">13</span> Troubleshooting the Neck Dropout</h2>
+    <p>
+      Now to your specific symptom: in position 3 (neck pickup only), the sound sometimes cuts
+      out, and wiggling the toggle restores it. This is one of the most common Telecaster
+      faults, and the &ldquo;wiggling fixes it&rdquo; clue narrows down the suspect list
+      almost immediately. The fault has to be somewhere mechanical that the lever physically
+      flexes when you wiggle.
+    </p>
+
+    <h3>Likely causes, ordered by probability</h3>
+    <ol>
+      <li>
+        <strong>Worn or oxidized contacts on the 3-way lever switch at the neck-position lug.</strong>
+        By a wide margin the most common cause. Years of playing flex the spring, oxide builds
+        up on both wiper and lug, and at some point the contact becomes inconsistent.
+        Wiggling momentarily scrubs the oxide and restores conduction.
+      </li>
+      <li>
+        <strong>Cold or cracked solder joint at the neck pickup hot lug on the switch.</strong>
+        A solder joint that was never properly heated when assembled can develop a hairline
+        crack that opens and closes as the lug flexes. Looks shiny on the outside but is
+        electrically intermittent.
+      </li>
+      <li>
+        <strong>Broken or intermittent neck pickup hot lead.</strong>
+        The thin pickup lead can fracture inside its insulation, especially right where it
+        exits the pickup or where it threads through the body cavity. Less common than the
+        switch itself but worth checking.
+      </li>
+      <li>
+        <strong>Loose switch mounting screws.</strong>
+        If the two screws holding the switch to the control plate are loose, the whole switch
+        body can shift slightly under the lever, fooling the mechanism into thinking it's in
+        a different position than the lever actually is. Easy to check, easy to fix.
+      </li>
+      <li>
+        <strong>Failed pickup coil (least likely given your symptoms).</strong>
+        A truly broken coil winding usually fails permanently &mdash; you would not be able to
+        wiggle the toggle and bring sound back, because the lever has nothing to do with the
+        coil itself. Mentioned only for completeness.
+      </li>
+    </ol>
+
+    <h3>Diagnostic procedure with a multimeter</h3>
+    <p>
+      Set your multimeter to <strong>continuity</strong> mode (it will beep when resistance is
+      below a few ohms) for the switch tests, and to <strong>resistance</strong> mode (kilo-ohm
+      range) for the pickup test. Make sure the guitar is unplugged from the amp.
+    </p>
+    <ol>
+      <li>
+        <strong>Open the control cavity.</strong> Slacken the strings (or remove them entirely
+        if you prefer), then unscrew the four small Phillips screws holding the control plate
+        to the body. Lift the plate out gently &mdash; the pickup leads run underneath it and
+        you don't want to yank them. Flip the plate over so you can see the underside of the
+        switch and pots.
+      </li>
+      <li>
+        <strong>Identify the lugs.</strong> Match what you see against figure 11.1. The 3-way
+        switch should have wires on three of its lugs along one side: bridge stage, neck stage,
+        and the common lug at the end. Confirm which is which by tracing the colored wires
+        back to their pickups.
+      </li>
+      <li>
+        <strong>Test the suspect path.</strong> Put the 3-way switch in position 3 (neck).
+        Touch one multimeter probe to the neck pickup's hot lug at the switch and the other
+        probe to the volume pot's input lug. The meter should beep continuously.
+        <em>Now wiggle the toggle lever.</em> If the beep cuts out and comes back, the switch
+        is conclusively the failure point.
+      </li>
+      <li>
+        <strong>Test the pickup itself.</strong> Move the meter to resistance mode and probe
+        directly across the neck pickup leads (black to white). You should read a stable value
+        in the 5.6 &ndash; 6.2 k&Omega; range. Tap and gently flex the pickup leads while
+        watching the reading. If it jumps to &ldquo;OL&rdquo; (open / no continuity)
+        intermittently, the pickup lead is fractured.
+      </li>
+      <li>
+        <strong>Inspect solder joints.</strong> With good light and ideally a magnifier, look
+        at every solder joint on the switch lugs. Healthy joints look smooth, slightly shiny
+        and conical, with the wire fully wetted by solder. Cold or cracked joints look dull,
+        grainy, ball-shaped, or have a visible ring around the wire where it enters the blob.
+      </li>
+      <li>
+        <strong>Check the mounting screws.</strong> Try to wiggle the switch body itself
+        relative to the control plate. There should be no movement at all. If the switch
+        shifts, snug up the two mounting screws (carefully &mdash; they thread directly into
+        the switch's plastic body and will strip if overtightened).
+      </li>
+    </ol>
+    <p>
+      In the overwhelming majority of cases, step 3 will identify the switch as the culprit
+      and you can move directly to the repair guide below. If step 3 passes cleanly but the
+      problem still occurs in normal play, the issue is upstream (steps 4&ndash;6) or the
+      problem is intermittent enough that you didn't catch it during the test &mdash; try
+      again after letting the guitar sit for a while, since temperature and humidity affect
+      oxidation behavior.
+    </p>
+
+    <!-- ============================================================ -->
+    <!-- 14. REPAIR                                                    -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="repair"><span class="num">14</span> Repair Guide: 3-Way Switch</h2>
+
+    <div class="callout warn">
+      <strong>Before you start</strong>
+      Unplug the guitar. Have the amp off and disconnected. Solder fumes are unpleasant
+      &mdash; work in a ventilated area. Keep the iron's tip away from pickup magnets and
+      from your fingers; soldering irons run at 350&nbsp;&deg;C and burn instantly.
+    </div>
+
+    <h3>Tools and materials</h3>
+    <ul>
+      <li>Small Phillips-head screwdriver (PH1)</li>
+      <li>Soldering iron, 25&ndash;40&nbsp;W, with a clean fine tip</li>
+      <li>Solder &mdash; 60/40 leaded rosin-core (easiest to work with) or a quality lead-free rosin-core</li>
+      <li>Desoldering braid or a desolder pump</li>
+      <li>Needle-nose pliers and small tweezers</li>
+      <li>A digital multimeter</li>
+      <li>Helping-hands or a soft work surface so the body isn't damaged</li>
+      <li><strong>Track A only:</strong> DeoxIT D5 contact cleaner</li>
+      <li><strong>Track B only:</strong> Fender 3-way switch P/N <code>0992041000</code> (or any standard CRL-style equivalent)</li>
+    </ul>
+
+    <h3>Track A &mdash; Clean and re-tension the existing switch (try this first)</h3>
+    <p>
+      If the diagnostic in section 13 confirmed an intermittent contact at the switch but
+      everything looks intact, you can often save the original switch with a 10-minute clean.
+    </p>
+    <ol>
+      <li>Slacken the strings; unscrew the control plate; flip it carefully so the wires aren't pulled tight.</li>
+      <li>Take a few sharp photos of the wiring as it currently is, from multiple angles. This is a free insurance policy in case anything moves.</li>
+      <li>Turn the DeoxIT D5 nozzle so the spray comes out as a small jet rather than a wide mist. Aim into the open side of the switch where the wiper rides on the lugs and give it a brief, controlled spray.</li>
+      <li>Work the lever back and forth through all three positions twenty to thirty times. The cleaner dissolves oxide and the mechanical motion scrubs the contacts clean.</li>
+      <li>Let the residue evaporate for a few minutes. Wipe up any drips with a clean cloth.</li>
+      <li>Re-test with the multimeter as in section 13, step 3. The continuity beep should now be rock solid even when you wiggle the lever.</li>
+      <li>If solid, reassemble. Snug the mounting screws gently; do not overtighten.</li>
+    </ol>
+    <p>
+      If after cleaning the symptom returns within a few weeks, the contact pressure has
+      genuinely failed and you should move on to Track B. Cleaning a switch with weak
+      contact-finger spring tension is at best a temporary fix.
+    </p>
+
+    <h3>Track B &mdash; Replace the 3-way switch</h3>
+    <p>
+      Replacement is straightforward but methodical. The risk is mis-wiring the new switch;
+      photos and labeling prevent this.
+    </p>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 700 300" role="img" aria-label="Lug map of the standard Fender 3-way switch as installed in the Am Pro II Telecaster.">
+        <!-- switch body -->
+        <rect x="120" y="60" width="460" height="180" rx="10" class="stroke fill-paper"/>
+        <text x="350" y="40" text-anchor="middle" class="label-bold">3-way switch &mdash; lug map (top view, plate flipped)</text>
+
+        <!-- pole 1 (used) -->
+        <g>
+          <circle cx="180" cy="120" r="10" class="stroke fill-paper"/>
+          <circle cx="280" cy="120" r="10" class="stroke fill-paper"/>
+          <circle cx="380" cy="120" r="10" class="stroke fill-paper"/>
+          <circle cx="490" cy="120" r="11" class="stroke fill-paper"/>
+          <text x="180" y="100" text-anchor="middle" class="label">stage 1</text>
+          <text x="280" y="100" text-anchor="middle" class="label">stage 2</text>
+          <text x="380" y="100" text-anchor="middle" class="label">stage 3</text>
+          <text x="490" y="100" text-anchor="middle" class="label-bold">COMMON</text>
+          <text x="180" y="148" text-anchor="middle" class="label-soft" fill="var(--bridge)">bridge hot</text>
+          <text x="280" y="148" text-anchor="middle" class="label-soft">(unused)</text>
+          <text x="380" y="148" text-anchor="middle" class="label-soft" fill="var(--neck)">neck hot</text>
+          <text x="490" y="148" text-anchor="middle" class="label-soft" fill="var(--accent)">to volume in</text>
+        </g>
+
+        <!-- pole 2 (unused on Tele) -->
+        <g opacity="0.55">
+          <circle cx="180" cy="200" r="10" class="stroke fill-paper"/>
+          <circle cx="280" cy="200" r="10" class="stroke fill-paper"/>
+          <circle cx="380" cy="200" r="10" class="stroke fill-paper"/>
+          <circle cx="490" cy="200" r="11" class="stroke fill-paper"/>
+          <text x="335" y="225" text-anchor="middle" class="label-soft">unused pole &mdash; leave these lugs empty on a stock Tele</text>
+        </g>
+      </svg>
+      <figcaption>Figure 14.1 &mdash; Lug map of the 3-way switch. Only one of its two poles is used in a Telecaster wiring.</figcaption>
+    </figure>
+
+    <ol>
+      <li>
+        <strong>Photograph everything.</strong> Take close-up photos of the existing switch
+        wiring from multiple angles before you touch anything. You will want these as reference
+        even if you trust the diagram in figure 14.1.
+      </li>
+      <li>
+        <strong>Label each wire.</strong> Wrap a small piece of masking tape around each wire
+        a few centimeters from its solder joint. Write &ldquo;neck hot&rdquo;, &ldquo;bridge
+        hot&rdquo;, &ldquo;to volume&rdquo; (the common lug) and so on. Trust nothing to memory.
+      </li>
+      <li>
+        <strong>Desolder the wires.</strong> Heat each joint until the solder flows, then use
+        desoldering braid (press the braid against the joint and apply the iron on top of it)
+        to wick the solder away. The wire should lift free easily; if it resists, apply more
+        heat &mdash; never pull hard.
+      </li>
+      <li>
+        <strong>Remove the old switch.</strong> Two small Phillips screws hold the switch to
+        the control plate. Keep the screws &mdash; you'll reuse them.
+      </li>
+      <li>
+        <strong>Mount the new switch.</strong> Orient it the same way the old one came out
+        (the lever-throw direction matters!). Tighten the mounting screws snugly but not
+        crushingly &mdash; the switch body is plastic and will strip.
+      </li>
+      <li>
+        <strong>Pre-tin the lugs.</strong> Touch a small amount of fresh solder to each lug
+        you plan to use, just enough to coat it. This makes the actual joints much easier.
+      </li>
+      <li>
+        <strong>Solder wires lug-for-lug.</strong> Working from your photo, attach each wire
+        to its corresponding lug on the new switch. The connections you need are:
+        <ul>
+          <li>Bridge pickup hot &rarr; bridge stage lug (figure 14.1, leftmost on used pole)</li>
+          <li>Neck pickup hot &rarr; neck stage lug (rightmost on used pole)</li>
+          <li>A short jumper wire from the common lug &rarr; volume pot input (lug 1)</li>
+          <li>Switch ground (the metal frame of the switch) &rarr; volume pot back, via a short ground wire</li>
+        </ul>
+        For each joint: insert the wire through the lug's hole, heat the joint with the iron,
+        feed in just enough solder for it to flow into a smooth concave fillet around the wire,
+        then remove the iron and hold the wire still until the solder freezes (a couple of
+        seconds). A good joint is shiny, smooth, and conical.
+      </li>
+      <li>
+        <strong>Verify before closing up.</strong> With the multimeter in continuity mode,
+        confirm:
+        <ul>
+          <li>Position 1 (bridge): continuity from bridge hot &rarr; volume in; no continuity from neck hot &rarr; volume in.</li>
+          <li>Position 2 (both): continuity from both bridge hot and neck hot &rarr; volume in. Push-push down vs up should change which other paths are made; verify against figure 11.1.</li>
+          <li>Position 3 (neck): continuity from neck hot &rarr; volume in; no continuity from bridge hot &rarr; volume in.</li>
+          <li>Wiggle the lever in each position. Continuity should not flicker.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Reassemble.</strong> Tuck the wires back into the cavity, drop the control
+        plate into place taking care not to pinch any wires, and reinstall the four control-plate
+        screws. Re-string and tune up.
+      </li>
+      <li>
+        <strong>Real-world test.</strong> Plug into the amp and play through every position
+        and every push-push state. Pay particular attention to the formerly-faulty neck
+        position; it should be silent (no dropouts) even with vigorous lever wiggling.
+      </li>
+    </ol>
+
+    <div class="callout">
+      <strong>If you hear a buzz or hum after the repair</strong>
+      Most likely a ground wire is loose. Re-open the cavity and confirm: pickup grounds,
+      switch ground, jack sleeve and bridge plate ground all terminate at the volume pot
+      back. The buzz disappearing when you touch the strings means the bridge ground wire
+      is intact; if even touching the strings doesn't help, that wire has come loose.
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 15. GLOSSARY                                                  -->
+    <!-- ============================================================ -->
+    <h2 class="section" id="glossary"><span class="num">15</span> Glossary &amp; Further Reading</h2>
+
+    <h3>Glossary</h3>
+    <table class="spec">
+      <tbody>
+        <tr><td><strong>AC</strong></td><td>Alternating current. The pickup output, like all audio signals, is AC.</td></tr>
+        <tr><td><strong>Alnico</strong></td><td>Aluminum-Nickel-Cobalt magnet alloy. Numbered grades (2, 5, etc.) describe magnetic strength and tonal character.</td></tr>
+        <tr><td><strong>Capacitance</strong></td><td>A component's ability to store electrical charge. Measured in farads (F); guitar caps are in microfarads (&micro;F) or nanofarads (nF).</td></tr>
+        <tr><td><strong>Continuity</strong></td><td>An electrical connection of essentially zero resistance. A continuity test is the multimeter's way of checking that two points are wired together.</td></tr>
+        <tr><td><strong>DPDT</strong></td><td>Double-pole, double-throw. A switch with six lugs that can route two independent signals to one of two destinations each.</td></tr>
+        <tr><td><strong>Impedance</strong></td><td>AC-equivalent of resistance; depends on frequency. Pickup output impedance interacts with cable capacitance to shape tone.</td></tr>
+        <tr><td><strong>Inductance</strong></td><td>A coil's resistance to changes in current. Pickups are inductive, which is why they form filters with capacitive cables.</td></tr>
+        <tr><td><strong>Low-pass filter</strong></td><td>A circuit that lets low frequencies through and attenuates high frequencies. The tone control is one.</td></tr>
+        <tr><td><strong>Parallel wiring</strong></td><td>Two coils whose hots are tied together and whose grounds are tied together. Output voltages average; impedances drop.</td></tr>
+        <tr><td><strong>Pole / throw</strong></td><td>Switch terminology. A &ldquo;pole&rdquo; is one independent switching contact; a &ldquo;throw&rdquo; is one of the destinations it can connect to.</td></tr>
+        <tr><td><strong>Potentiometer (pot)</strong></td><td>A three-terminal variable resistor used as either a volume control (voltage divider) or, in the Tele tone control, as a variable shunt.</td></tr>
+        <tr><td><strong>RWRP</strong></td><td>Reverse Wound, Reverse Polarity. Two pickups with opposing winding direction <em>and</em> opposing magnetic polarity, so that combining them cancels hum.</td></tr>
+        <tr><td><strong>Series wiring</strong></td><td>Two coils stacked end-to-end: one's output drives the next's input. Voltages add; impedances add.</td></tr>
+        <tr><td><strong>Star ground</strong></td><td>A grounding scheme where every ground wire returns to a single physical point, eliminating ground loops and noise.</td></tr>
+        <tr><td><strong>Treble bleed</strong></td><td>A small capacitor (sometimes with a resistor) wired across a volume pot's input and wiper to keep high frequencies present as the volume is turned down.</td></tr>
+        <tr><td><strong>V-Mod II</strong></td><td>Fender's pickup line introduced with the American Professional II series. Mixes Alnico 5 and Alnico 2 magnets within each pickup for tuned per-string response.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Further reading and resources</h3>
+    <ul>
+      <li>
+        <strong>Fender American Professional II Telecaster Service Manual</strong> (PR5854,
+        Rev. C, dated 5-8-2023). The authoritative source for parts numbers, pickup specs,
+        and wiring assembly. Available as a PDF from Fender's support site.
+      </li>
+      <li>
+        <strong>Seymour Duncan and Fralin wiring diagram libraries.</strong> Both pickup
+        manufacturers publish free wiring diagrams for many guitar configurations, including
+        series/parallel mods, 4-way Tele wiring, and treble bleed variations.
+      </li>
+      <li>
+        <strong>The TDPRI forum (tdpri.com).</strong> The Telecaster Discussion Page Reissue
+        is the largest community of Tele players and modders; the Tele-Technical sub-forum has
+        detailed threads on every imaginable wiring scheme.
+      </li>
+      <li>
+        <strong>Vintage 1950s 3-way wiring</strong> is worth reading about if you become
+        curious about how Leo Fender originally voiced the instrument &mdash; the early Teles
+        had a dark &ldquo;rhythm&rdquo; circuit on the neck pickup that almost no modern
+        player likes, but the historical context is interesting.
+      </li>
+      <li>
+        <strong>4-way Tele mod.</strong> A simple replacement of the 3-way switch with a
+        4-position equivalent gives you neck-bridge series wiring without needing a push-push
+        pot at all. Many players prefer this once they know they like the series sound.
+      </li>
+    </ul>
+
+    <footer class="colophon">
+      Specifications and component values in this guide are taken from Fender Musical Instruments
+      Corporation's official service documentation for the American Professional II Telecaster
+      (model prefix 011394, document PR5854, Rev. C, 8&nbsp;May&nbsp;2023). All diagrams are
+      original SVG illustrations made for this guide.
+    </footer>
+  </main>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  var k = 'telecaster-guide-theme';
+  var toggle = document.getElementById('theme-toggle');
+  var labelLight = document.getElementById('theme-label-light');
+  var labelDark = document.getElementById('theme-label-dark');
+  if (!toggle) return;
+
+  function isDark() {
+    return root.getAttribute('data-theme') === 'dark';
+  }
+
+  function syncUi() {
+    var dark = isDark();
+    toggle.setAttribute('aria-checked', dark ? 'true' : 'false');
+    toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    if (labelLight && labelDark) {
+      labelLight.classList.toggle('is-active', !dark);
+      labelDark.classList.toggle('is-active', dark);
+    }
+  }
+
+  toggle.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    if (next === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    try {
+      localStorage.setItem(k, next);
+    } catch (e) { /* ignore */ }
+    syncUi();
+  });
+
+  syncUi();
+})();
+</script>
+</body>
+</html>
